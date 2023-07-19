@@ -15,6 +15,6 @@ app.use(express.json());
 app.use(morgan('tiny'));
 
 app.use('/api', surveysRouter);
-app.use((res: Response): Response => res.status(404).json({ message: "404 not found" }));
+//app.use((res: Response): Response => res.status(404).json({ message: "404 not found" }));
 
 app.listen(process.env.PORT, (): void => console.log(`listening on ${process.env.PORT}`));

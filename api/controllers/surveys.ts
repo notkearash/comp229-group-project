@@ -16,7 +16,7 @@ const createProfessor = async (req: Request, res: Response) => {
     res.status(201).json(professor);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
+    //res.status(500).json({ error: 'Internal server error' });
   }
 };
 
@@ -26,7 +26,7 @@ const getAllProfessors = async (req: Request, res: Response) => {
     res.json(professors);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
+    //res.status(500).json({ error: 'Internal server error' });
   }
 };
 
