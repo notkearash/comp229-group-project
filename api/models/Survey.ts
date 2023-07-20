@@ -5,7 +5,7 @@ interface Rating {
 }
 
 interface Professor extends Document {
-  content: string;
+  name: string;
   ratings: Types.ObjectId[] | Rating[];
 }
 
@@ -17,7 +17,7 @@ const ratingSchema = new Schema<Rating>({
 });
 
 const professorSchema = new Schema<Professor>({
-  content: {
+  name: {
     type: String,
     required: true,
   },

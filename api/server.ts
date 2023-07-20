@@ -1,6 +1,6 @@
 import morgan from 'morgan';
 import mongoose, { Error } from 'mongoose';
-import express, { Response } from 'express';
+import express, { Request, Response } from 'express';
 import { router as surveysRouter } from './routes/surveys.routes';
 require('dotenv').config();
 
@@ -15,6 +15,6 @@ app.use(express.json());
 app.use(morgan('tiny'));
 
 app.use('/api', surveysRouter);
-//app.use((res: Response): Response => res.status(404).json({ message: "404 not found" }));
+app.use((req: Request, res: Response) => res.status(404).json({ message: "404 not found" }));
 
 app.listen(process.env.PORT, (): void => console.log(`listening on ${process.env.PORT}`));

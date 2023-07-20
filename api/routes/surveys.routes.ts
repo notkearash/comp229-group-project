@@ -1,7 +1,10 @@
-import { getAllProfessors, createProfessor } from '../controllers/surveys';
+import surveysController from '../controllers/surveys';
 import express, { Router, Request, Response } from "express";
 
 export const router: Router = express.Router();
-router.get('/professor', getAllProfessors);
-router.post('professor/', createProfessor);
+router.get('/professor', surveysController.getAllProfessors);
+router.post('/professor', surveysController.createProfessor);
+router.get('/professor/:id', surveysController.getProfessorById);
+router.put('/professor/:id', surveysController.updateProfessorById);
+router.delete('/professor/:id', surveysController.deleteProfessorById);
 
