@@ -39,7 +39,6 @@ const getProfessorById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    // Find the professor by _id
     const professor = await ProfessorModel.findById(id);
 
     if (!professor) {
@@ -92,4 +91,69 @@ const deleteProfessorById = async (req: Request, res: Response) => {
   }
 };
 
-export default { createProfessor, getAllProfessors, getProfessorById, updateProfessorById, deleteProfessorById };
+const addRatingToProfessor = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { rating } = req.body;
+
+    if (rating !== 'recommended' && rating !== 'not recommended') {
+      return res.status(400).json({ error: 'Invalid rating. Use either "recommended" or "not recommended"' });
+    }
+
+    const professor = await ProfessorModel.findById(id);
+
+    if (!professor) {
+      return res.status(404).json({ error: 'Professor not found' });
+    }
+
+    professor.ratings.push(rating);
+
+    await professor.save();
+
+    res.status(200).json(professor);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const deleteRatingFromProfessor = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { index } = req.body;
+
+    const professor = await ProfessorModel.findById(id);
+
+    if (!professor) {
+      return res.status(404).json({ error: 'Professor not found' });
+    }
+
+    if (index === undefined || index === null) {
+      professor.ratings.pop();
+    } else {
+      const ratingIndex = parseInt(index, 10);
+      if (isNaN(ratingIndex) || ratingIndex < 0 || ratingIndex >= professor.ratings.length) {
+        return res.status(400).json({ error: 'Invalid rating index' });
+      }
+
+      professor.ratings.splice(ratingIndex, 1);
+    }
+
+    await professor.save();
+
+    res.status(200).json(professor);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export default {
+  createProfessor,
+  getAllProfessors,
+  getProfessorById,
+  updateProfessorById,
+  deleteProfessorById,
+  addRatingToProfessor,
+  deleteRatingFromProfessor
+};

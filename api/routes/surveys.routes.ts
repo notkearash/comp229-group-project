@@ -8,3 +8,5 @@ router.get('/professor/:id', surveysController.getProfessorById);
 router.put('/professor/:id', surveysController.updateProfessorById);
 router.delete('/professor/:id', surveysController.deleteProfessorById);
 
+router.post('/professor/:id/rating/', surveysController.addRatingToProfessor);
+router.delete('/professor/:id/rating/', surveysController.deleteRatingFromProfessor);
