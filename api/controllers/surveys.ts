@@ -186,10 +186,7 @@ const createUser = async (req: Request, res: Response) => {
 const loginUser = async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body
-    const attemptedUser = {
-      username,
-      password
-    }
+    const attemptedUser = { username }
 
     const user = await UserModel.findOne({ username });
 
@@ -197,7 +194,7 @@ const loginUser = async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    const passwordMatch = await bcrypt.compare(attemptedUser.password, user.password);
+    const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
       return res.status(401).json({ error: 'Invalid credentials' });
@@ -221,5 +218,5 @@ export default {
   deleteRatingFromProfessor,
   createUser,
   getAllUsers,
-  loginUser
+  loginUser,
 };
