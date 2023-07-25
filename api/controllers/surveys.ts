@@ -1,5 +1,6 @@
+import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
-import { ProfessorModel } from '../models/Survey';
+import { ProfessorModel, UserModel } from '../models/Survey';
 
 const createProfessor = async (req: Request, res: Response) => {
   try {
@@ -148,6 +149,41 @@ const deleteRatingFromProfessor = async (req: Request, res: Response) => {
   }
 };
 
+const getAllUsers = async (req: Request, res: Response) => {
+  try {
+    const users = await UserModel.find();
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const createUser = async (req: Request, res: Response) => {
+  try {
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+    const newUser = {
+      username: req.body.username,
+      password: hashedPassword
+    }
+    const existingUser = await UserModel.findOne(newUser);
+
+    if (existingUser) {
+      return res.status(409).json({ error: 'User already exists' });
+    }
+
+    const user = await UserModel.create(newUser);
+
+    res.status(201).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+const loginUser = async (req: Request, res: Response) => {}
+
 export default {
   createProfessor,
   getAllProfessors,
@@ -155,5 +191,8 @@ export default {
   updateProfessorById,
   deleteProfessorById,
   addRatingToProfessor,
-  deleteRatingFromProfessor
+  deleteRatingFromProfessor,
+  createUser,
+  getAllUsers,
+  loginUser
 };

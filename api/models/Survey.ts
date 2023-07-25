@@ -5,6 +5,11 @@ interface Professor extends Document {
   ratings: string[];
 }
 
+interface User extends Document {
+  username: string;
+  password: string;
+}
+
 const professorSchema = new Schema<Professor>({
   name: {
     type: String,
@@ -13,6 +18,18 @@ const professorSchema = new Schema<Professor>({
   ratings: [String],
 });
 
-const ProfessorModel = model<Professor>('Professor', professorSchema);
+const userSchema = new Schema<User>({
+  username: {
+    type: String,
+    required: true
+  },
+  password: {
+    type: String,
+    required: true
+  }
+})
 
-export { ProfessorModel };
+const ProfessorModel = model<Professor>('Professor', professorSchema);
+const UserModel = model<User>('User', userSchema);
+
+export { ProfessorModel, UserModel };
