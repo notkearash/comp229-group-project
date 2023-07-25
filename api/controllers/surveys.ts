@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
 import { ProfessorModel, UserModel } from '../models/Survey';
 
@@ -182,7 +183,33 @@ const createUser = async (req: Request, res: Response) => {
   }
 }
 
-const loginUser = async (req: Request, res: Response) => {}
+const loginUser = async (req: Request, res: Response) => {
+  try {
+    const { username, password } = req.body
+    const attemptedUser = {
+      username,
+      password
+    }
+
+    const user = await UserModel.findOne({ username });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const passwordMatch = await bcrypt.compare(attemptedUser.password, user.password);
+
+    if (!passwordMatch) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    const accessToken = jwt.sign(attemptedUser, process.env.ACCESS_TOKEN_SECRET);
+    res.status(200).json({ accessToken: accessToken });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
 
 export default {
   createProfessor,
